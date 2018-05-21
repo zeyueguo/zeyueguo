@@ -10,8 +10,8 @@ function compose(...funcs) {
     }
 
     return funcs.reduce(function (a, b) {
-        // console.log('first a', a);
-        // console.log('first b', b);
+        console.log('before a', a);
+        console.log('before b', b);
         return function (...args) {
             console.log('a', a);
             console.log('b', b);
