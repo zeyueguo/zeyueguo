@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+       /*
+        function tail(i) {
+            if (i > 3) return
+            console.log('修改前', i);
+            tail(i + 1)
+            console.log('修改后', i);
+        }
+
+        tail(0)
+        */
+           /*
+        function c() {
+            console.log('c');
+            console.log('c 后');
+        }
+
+        function b() {
+            console.log('b');
+            c();
+            console.log('b 后');
+        }
+
+        function a() {
+            console.log('a');
+            b();
+            console.log('a 后');
+        }
+
+        a();
+         */
+
+        function tail(i) {
+            if (i > 3) return i
+            console.log('修改前', i);
+            return tail(i + 1)
+        }
+
+        tail(0)
+
+    </script>
+</body>
+</html>
