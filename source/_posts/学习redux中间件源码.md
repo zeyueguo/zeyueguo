@@ -69,7 +69,11 @@ console.log(curry(1, 2)(1)); // 2
 
 ### 1.2 Compose 源代码
 
-src/compose.js  ES6的代码
+src/compose.js
+
+``` js
+[x1, x2, x3, x4].reduce(f) = f( f( f(x1, x2), x3), x4)
+```
 
 ``` js
 function compose(...funcs) {
@@ -97,47 +101,10 @@ function compose(...funcs) {
 }
 ```
 
-lib/compose.js  ES5的代码
-
-``` js
-function compose() {
- // funcs = Array(_len)返回一个 length 的值等于 _len 的数组对象, 不能理解认为它包含 _len 个值为 undefined 的元素
-  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  if (funcs.length === 0) {
-    return function (arg) {
-      return arg;
-    };
-  }
-
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-
-  return funcs.reduce(function (a, b) {
-    return function () {
-      return a(b.apply(undefined, arguments));
-    };
-  });
-}
-```
-
 DEMO
 
 ``` js
 function compose(...funcs) {
-    console.log('funcs.length', funcs.length);
-    if (funcs.length === 0) {
-        return arg => arg
-    }
-  
-    if (funcs.length === 1) {
-        // console.log('funcs[0]', funcs[0]);
-        return funcs[0]
-    }
-
     return funcs.reduce(function (a, b) {
         console.log('before a', a);
         console.log('before b', b);
@@ -147,59 +114,43 @@ function compose(...funcs) {
             return a(b(...args))
         }
     })
-
 }
 
-const action = {
-    type: 'add',
-    payload: {
-        number: 0
-    }
-}
+const f = (arg) => `函数f(${arg})` 
 
-function add_1(action) {
-    console.log('add_1')
-    action.payload.number += 1;
-    return action
-}
+const g = (arg) => `函数g(${arg})`
 
-function add_2(action) {
-    console.log('add_2')
-    action.payload.number += 2;
-    return action
-}
+// function h 最后一个函数可以接受多个参数
+const h = (...arg) => `函数h(${arg.join('_')})`
 
-function add_3(action) {
-    console.log('add_3')
-    action.payload.number += 3;
-    return action
-}
-function add_4(action) {
-    console.log('add_4')
-    action.payload.number += 4;
-    return action
-}
-function add_5(action) {
-    console.log('add_5')
-    action.payload.number += 5;
-    return action
-}
-
-// const result = compose(...[])(action)
-// const result = compose(...[add_1])(action)
-const result = compose(...[add_1, add_2, add_3, add_4, add_5])(action)
-
-// const result = add_1(add_2(add_3(action)))
+const result = compose(f, g, h)(1,2,3)
 
 console.log(result);
-```
+/* 
+before a (arg) => `函数f(${arg})`
+before b (arg) => `函数g(${arg})`
+before a function (...args) {
+            console.log('a', a);
+            console.log('b', b);
+            return a(b(...args))
+        }
+before b (...arg) => `函数h(${arg.join('_')})`
 
+a function (...args) {
+            console.log('a', a);
+            console.log('b', b);
+            return a(b(...args))
+        }
+b (...arg) => `函数h(${arg.join('_')})`
+a (arg) => `函数f(${arg})`
+b (arg) => `函数g(${arg})`
+函数f(函数g(函数h(1_2_3))) 
+*/
+```
 
 ``` js
 let middleware = [routerMiddleware(history), reduxActionsPromise, timerMiddleware]
 ```
-
-
 
 <!-- let middleware = [routerMiddleware(history), reduxActionsPromise, timerMiddleware]
 
